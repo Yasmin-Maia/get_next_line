@@ -6,7 +6,7 @@
 /*   By: ymaia-do <ymaia-do@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 12:03:02 by ymaia-do          #+#    #+#             */
-/*   Updated: 2024/12/11 16:19:34 by ymaia-do         ###   ########.fr       */
+/*   Updated: 2024/12/16 17:05:23 by ymaia-do         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,4 +48,21 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	return (temp);
 }
 
+char	*ft_strdup(const char *s1)
+{
+	char	*ptr;
+	int		i;
+
+	i = 0;
+	ptr = (char *)malloc(ft_strlen(s1) + 1);
+	if (ptr == NULL)
+		return (NULL);
+	while (s1[i])
+	{
+		ptr[i] = s1[i];
+		i++;
+	}
+	ptr[i] = '\0';
+	return (ptr);
+}
 
