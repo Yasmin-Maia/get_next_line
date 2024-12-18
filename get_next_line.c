@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ymaia-do <ymaia-do@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yasmin <yasmin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/04 15:57:49 by ymaia-do          #+#    #+#             */
-/*   Updated: 2024/12/16 17:06:58 by ymaia-do         ###   ########.fr       */
+/*   Created: 2024/12/06 15:24:47 by yasmin            #+#    #+#             */
+/*   Updated: 2024/12/17 16:59:02 by yasmin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,46 +41,66 @@ char *ft_remove_read_line(char *buffer)
 		free(buffer);
 		return (new_buffer);
 	}
-	return (buffer);
+	free(buffer);
+	return (NULL);
 }
 
 char *ft_get_line(int fd, char *buffer)
 {
-	ssize_t	bytes_read;
-	char	*backup;
-	char	*new_backup;
-	
-	backup = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	if (backup == NULL)
-		return(NULL);
-	bytes_read = 1;
-	while (ft_read_file(backup) == 0 && bytes_read != 0)
-	{
-		bytes_read = read(fd, backup, BUFFER_SIZE);
-		if (bytes_read == -1)
-			return (free(backup), free(buffer), NULL);
-		new_backup = ft_strjoin(buffer, backup);
-		if (!new_backup)
-			return (free(backup), NULL);
-		free(buffer);
-		buffer = new_backup;
-	}
-	if (ft_read_file(backup) == 1)
-		buffer = ft_remove_read_line(buffer);
-	return (free(backup), buffer);
+    ssize_t bytes_read;
+    char    *backup;
+    char    *new_backup;
+
+    backup = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+    if (backup == NULL)
+        return (NULL);
+    bytes_read = 1;
+    while (ft_read_file(buffer) == 0 && bytes_read != 0) 
+    {
+        bytes_read = read(fd, backup, BUFFER_SIZE);
+        if (bytes_read == -1) 
+            return (free(backup), free(buffer), NULL);
+        backup[bytes_read] = '\0';
+        new_backup = ft_strjoin(buffer, backup);
+        if (!new_backup) 
+            return (free(backup), free(buffer), NULL);
+        free(buffer);
+        buffer = new_backup;
+    }
+    free(backup);
+    return (buffer);
 }
 
 
-char *get_next_line(int fd)
+char *get_next_line(int fd) 
 {
-	static char	*buffer;
-	char		*line;
-	
+    static char *buffer = NULL;
+    char        *line;
+    int         i;
+
+    i = 0;
+    if (fd < 0 || BUFFER_SIZE <= 0)
+        return (NULL);
+    if (!buffer)
+        buffer = ft_strdup("");
+    buffer = ft_get_line(fd, buffer);
+    if (!buffer)
+        return (NULL);
+    while (buffer[i] != '\n' && buffer[i] != '\0')
+        i++;
+    line = ft_substr(buffer, 0, i + (buffer[i] == '\n'));
+    if (!line)
+        return (NULL);
+    buffer = ft_remove_read_line(buffer);
+    return (line);
 }
+
+
+#include <stdio.h>
 
 int main(void)
 {
-    int fd = open("arquivo.txt", O_RDONLY);
+    int fd = open("test2.txt", O_RDONLY);
     if (fd == -1) 
 	{
         perror("Erro ao abrir o arquivo");

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ymaia-do <ymaia-do@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yasmin <yasmin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/10 12:03:02 by ymaia-do          #+#    #+#             */
-/*   Updated: 2024/12/16 17:05:23 by ymaia-do         ###   ########.fr       */
+/*   Created: 2024/12/06 15:40:29 by yasmin            #+#    #+#             */
+/*   Updated: 2024/12/17 16:30:14 by yasmin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,3 +66,28 @@ char	*ft_strdup(const char *s1)
 	return (ptr);
 }
 
+char	*ft_substr(char const *s, unsigned int start, size_t len)
+{
+	size_t	i;
+	size_t	slen;
+	char	*temp;
+
+	if (s == NULL)
+		return (NULL);
+	i = 0;
+	slen = ft_strlen(s);
+	if (start >= slen || len == 0)
+		return (ft_strdup(""));
+	if (start + len > slen)
+		len = slen - start;
+	temp = malloc(sizeof(char) * (len + 1));
+	if (temp == NULL)
+		return (NULL);
+	while (i < len)
+	{
+		temp[i] = s[start + i];
+		i++;
+	}
+	temp[i] = '\0';
+	return (temp);
+}
