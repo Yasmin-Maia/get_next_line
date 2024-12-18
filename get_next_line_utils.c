@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yasmin <yasmin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ymaia-do <ymaia-do@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 15:40:29 by yasmin            #+#    #+#             */
-/*   Updated: 2024/12/17 16:30:14 by yasmin           ###   ########.fr       */
+/*   Updated: 2024/12/18 18:14:54 by ymaia-do         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,28 +66,28 @@ char	*ft_strdup(const char *s1)
 	return (ptr);
 }
 
-char	*ft_substr(char const *s, unsigned int start, size_t len)
+void	*ft_calloc(size_t count, size_t size)
 {
-	size_t	i;
-	size_t	slen;
-	char	*temp;
+	void	*ptr;
 
-	if (s == NULL)
+	ptr = malloc(count * size);
+	if (ptr == NULL)
 		return (NULL);
+	ft_bzero(ptr, count * size);
+	return (ptr);
+}
+
+
+void	ft_bzero(void *s, size_t n)
+{
+	unsigned char	*c;
+	size_t			i;
+
+	c = s;
 	i = 0;
-	slen = ft_strlen(s);
-	if (start >= slen || len == 0)
-		return (ft_strdup(""));
-	if (start + len > slen)
-		len = slen - start;
-	temp = malloc(sizeof(char) * (len + 1));
-	if (temp == NULL)
-		return (NULL);
-	while (i < len)
+	while (i < n)
 	{
-		temp[i] = s[start + i];
+		c[i] = '\0';
 		i++;
 	}
-	temp[i] = '\0';
-	return (temp);
 }
