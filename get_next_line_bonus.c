@@ -10,7 +10,7 @@
 /*																			*/
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 static int	read_file(char *bag)
 {
@@ -105,35 +105,42 @@ static char	*write_line(char *bag)
 
 char	*get_next_line(int fd)
 {
-	static char	*bag;
+	static char	*bag[FD_SIZE];
 	char		*line;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0 || fd >= FD_SIZE)
 		return (NULL);
-	if (!bag)
-		bag = ft_strdup("");
-	bag = get_line(fd, bag);
-	if (!bag)
+	if (!bag[fd])
+		bag[fd] = ft_strdup("");
+	bag[fd] = get_line(fd, bag[fd]);
+	if (!bag[fd])
 		return (NULL);
-	line = write_line(bag);
+	line = write_line(bag[fd]);
 	if (!line)
 		return (NULL);
-	bag = remove_read_line(bag);
+	bag[fd] = remove_read_line(bag[fd]);
 	return (line);
 }
-/* 
+
 
 int main(void)
 {
-	int fd = open("test1.txt", O_RDONLY);
+	char	*s[] = {"test1.txt", "test2.txt", "test3.txt", 
+	"test4.txt", "test5.txt", "test6.txt"};
+	int		i = 0;
+	int 	fd;
 	
 	char *line;
-	while ((line = get_next_line(fd)) != NULL) 
+	while (i < 6)
 	{
-		printf("%s", line);
-		free(line);
+		fd = open(s[i], O_RDONLY);
+		while ((line = get_next_line(fd)) != NULL) 
+		{
+			printf("%s", line);
+			free(line);
+		}
+		close(fd);
+		i++;
 	}
-
-	close(fd);
 	return (0);
-} */
+} 
