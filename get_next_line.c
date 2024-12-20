@@ -36,9 +36,13 @@ static char	*remove_read_line(char *bag)
 	i = 0;
 	while (bag[i] != '\n' && bag[i] != '\0')
 		i++;
-	if (bag[i] == '\n')
+	if (bag[i] == '\0')
+		return (free(bag), NULL);
+	//printf ("bag: %s :bag ", bag);
+	if (bag[i] == '\n' || bag[i] == '\0')
 	{
 		new_bag = ft_strdup(&bag[i + 1]);
+		//printf ("new_bag: %s :new_bag ", new_bag);
 		free(bag);
 		return (new_bag);
 	}
@@ -52,27 +56,22 @@ static char	*get_line(int fd, char *bag)
 	char	*buffer;
 	char	*backup;
 
-	if (bag == NULL)
-		bag = ft_calloc(sizeof(char), 1);
+	buffer = ft_calloc(sizeof(char), (BUFFER_SIZE + 1));
+	if (!buffer)
+		return (NULL);
 	bytes_read = 1;
 	while (read_file(bag) == 0 && bytes_read != 0)
 	{
-		buffer = ft_calloc(sizeof(char), (BUFFER_SIZE + 1));
-		if (!buffer)
-			return (NULL);
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
-		if (bytes_read == -1 || (bytes_read == 0 && bag[0] == '\0'))
+		if (bytes_read == -1)
 			return (free(buffer), free(bag), NULL);
-		if (bytes_read == 0)
-			break ;
 		backup = ft_strjoin(bag, buffer);
-		free(buffer);
 		if (!backup)
-			return (free(bag), NULL);
+			return (free(buffer), free(bag), NULL);
 		free(bag);
 		bag = backup;
 	}
-	return (bag);
+	return (free(buffer), bag);
 }
 
 static char	*write_line(char *bag)
@@ -83,7 +82,7 @@ static char	*write_line(char *bag)
 
 	i = 0;
 	j = 0;
-	if (!bag)
+	if (!bag || bag[0] == '\0')
 		return (NULL);
 	while (bag[i] != '\n' && bag[i] != '\0')
 		i++;
@@ -96,10 +95,8 @@ static char	*write_line(char *bag)
 		j++;
 	}
 	if (bag[j] == '\n')
-	{
-		line[j] = '\n';
-		j++;
-	}
+		line[j++] = '\n';
+	line[j] = '\0';
 	return (line);
 }
 
@@ -116,16 +113,16 @@ char	*get_next_line(int fd)
 	if (!bag)
 		return (NULL);
 	line = write_line(bag);
+	bag = remove_read_line(bag);
 	if (!line)
 		return (NULL);
-	bag = remove_read_line(bag);
 	return (line);
 }
-/* 
+
 
 int main(void)
 {
-	int fd = open("test1.txt", O_RDONLY);
+	int fd = open("giant_line_nl.txt", O_RDONLY);
 	
 	char *line;
 	while ((line = get_next_line(fd)) != NULL) 
@@ -136,4 +133,4 @@ int main(void)
 
 	close(fd);
 	return (0);
-} */
+}

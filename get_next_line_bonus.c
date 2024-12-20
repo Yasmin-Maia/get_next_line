@@ -121,8 +121,7 @@ char	*get_next_line(int fd)
 	bag[fd] = remove_read_line(bag[fd]);
 	return (line);
 }
-
-
+/* 
 int main(void)
 {
 	char	*s[] = {"test1.txt", "test2.txt", "test3.txt", 
@@ -143,4 +142,4 @@ int main(void)
 		i++;
 	}
 	return (0);
-} 
+}  */
