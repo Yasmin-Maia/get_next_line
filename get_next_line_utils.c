@@ -6,7 +6,7 @@
 /*   By: ymaia-do <ymaia-do@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 15:40:29 by yasmin            #+#    #+#             */
-/*   Updated: 2024/12/20 17:22:47 by ymaia-do         ###   ########.fr       */
+/*   Updated: 2024/12/23 10:43:31 by ymaia-do         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,45 +48,19 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	return (temp);
 }
 
-char	*ft_strdup(const char *s1)
-{
-	char	*ptr;
-	int		i;
-
-	i = 0;
-	ptr = (char *)ft_calloc(ft_strlen(s1) + 1, sizeof(char));
-	if (ptr == NULL)
-		return (NULL);
-	while (s1[i])
-	{
-		ptr[i] = s1[i];
-		i++;
-	}
-	ptr[i] = '\0';
-	return (ptr);
-}
-
 void	*ft_calloc(size_t count, size_t size)
 {
-	void	*ptr;
+	char	*ptr;
+	size_t	i;
 
 	ptr = malloc(count * size);
 	if (ptr == NULL)
 		return (NULL);
-	ft_bzero(ptr, count * size);
-	return (ptr);
-}
-
-void	ft_bzero(void *s, size_t n)
-{
-	unsigned char	*c;
-	size_t			i;
-
-	c = s;
 	i = 0;
-	while (i < n)
+	while (i < count * size)
 	{
-		c[i] = '\0';
+		ptr[i] = '\0';
 		i++;
 	}
+	return (ptr);
 }

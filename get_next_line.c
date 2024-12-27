@@ -1,13 +1,13 @@
 /* ************************************************************************** */
-/*																			*/
-/*														:::	  ::::::::   */
-/*   get_next_line.c									:+:	  :+:	:+:   */
-/*													+:+ +:+		 +:+	 */
-/*   By: ymaia-do <ymaia-do@student.42.fr>		  +#+  +:+	   +#+		*/
-/*												+#+#+#+#+#+   +#+		   */
-/*   Created: 2024/12/06 15:24:47 by yasmin			#+#	#+#			 */
-/*   Updated: 2024/12/18 14:06:26 by ymaia-do		 ###   ########.fr	   */
-/*																			*/
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ymaia-do <ymaia-do@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/06 15:24:47 by yasmin            #+#    #+#             */
+/*   Updated: 2024/12/27 11:50:19 by ymaia-do         ###   ########.fr       */
+/*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
@@ -31,23 +31,29 @@ static int	read_file(char *bag)
 static char	*remove_read_line(char *bag)
 {
 	int		i;
+	int		j;
 	char	*new_bag;
 
 	i = 0;
+	j = 0;
+	if (!bag)
+		return (NULL);
 	while (bag[i] != '\n' && bag[i] != '\0')
 		i++;
 	if (bag[i] == '\0')
 		return (free(bag), NULL);
-	//printf ("bag: %s :bag ", bag);
-	if (bag[i] == '\n' || bag[i] == '\0')
+	new_bag = ft_calloc(sizeof(char), (ft_strlen(bag) - i + 1));
+	if (!new_bag)
+		return (free(bag), NULL);
+	i++;
+	while (bag[i] != '\0')
 	{
-		new_bag = ft_strdup(&bag[i + 1]);
-		//printf ("new_bag: %s :new_bag ", new_bag);
-		free(bag);
-		return (new_bag);
+		new_bag[j] = bag[i];
+		i++;
+		j++;
 	}
 	free(bag);
-	return (NULL);
+	return (new_bag);
 }
 
 static char	*get_line(int fd, char *bag)
@@ -60,18 +66,20 @@ static char	*get_line(int fd, char *bag)
 	if (!buffer)
 		return (NULL);
 	bytes_read = 1;
-	while (read_file(bag) == 0 && bytes_read != 0)
+	while (read_file(bag) == 0 && bytes_read > 0)
 	{
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
-		if (bytes_read == -1)
+		if (bytes_read < 0)
 			return (free(buffer), free(bag), NULL);
+		buffer[bytes_read] = '\0';
 		backup = ft_strjoin(bag, buffer);
 		if (!backup)
 			return (free(buffer), free(bag), NULL);
 		free(bag);
 		bag = backup;
 	}
-	return (free(buffer), bag);
+	free(buffer);
+	return (bag);
 }
 
 static char	*write_line(char *bag)
@@ -86,7 +94,7 @@ static char	*write_line(char *bag)
 		return (NULL);
 	while (bag[i] != '\n' && bag[i] != '\0')
 		i++;
-	line = ft_calloc(sizeof(char), (i + 2));
+	line = (char *)ft_calloc(sizeof(char), (i + 2));
 	if (!line)
 		return (NULL);
 	while (bag[j] != '\n' && bag[j] != '\0')
@@ -108,7 +116,7 @@ char	*get_next_line(int fd)
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	if (!bag)
-		bag = ft_strdup("");
+		bag = ft_calloc(sizeof(char), 1);
 	bag = get_line(fd, bag);
 	if (!bag)
 		return (NULL);
@@ -119,18 +127,25 @@ char	*get_next_line(int fd)
 	return (line);
 }
 
+/*  
+#include <stdio.h>
 
 int main(void)
 {
-	int fd = open("giant_line_nl.txt", O_RDONLY);
-	
-	char *line;
-	while ((line = get_next_line(fd)) != NULL) 
+    int fd = open("test1.txt", O_RDONLY);
+    if (fd == -1) 
 	{
-		printf("%s", line);
-		free(line);
-	}
+        perror("Erro ao abrir o arquivo");
+        return 1;
+    }
 
-	close(fd);
-	return (0);
-}
+    char *line;
+    while ((line = get_next_line(fd)) != NULL) 
+	{
+        printf("%s", line);
+        free(line);
+    }
+
+    close(fd);
+    return (0);
+}  */
