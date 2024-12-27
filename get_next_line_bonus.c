@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ymaia-do <ymaia-do@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 15:24:47 by yasmin            #+#    #+#             */
-/*   Updated: 2024/12/27 13:40:44 by ymaia-do         ###   ########.fr       */
+/*   Updated: 2024/12/27 13:44:11 by ymaia-do         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 static int	read_file(char *bag)
 {
@@ -110,40 +110,41 @@ static char	*write_line(char *bag)
 
 char	*get_next_line(int fd)
 {
-	static char	*bag;
+	static char	*bag[FD_SIZE];
 	char		*line;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0 || fd >= FD_SIZE)
 		return (NULL);
-	if (!bag)
-		bag = ft_calloc(sizeof(char), 1);
-	bag = get_line(fd, bag);
-	if (!bag)
+	if (!bag[fd])
+		bag[fd] = ft_calloc(sizeof(char), 1);
+	bag[fd] = get_line(fd, bag[fd]);
+	if (!bag[fd])
 		return (NULL);
-	line = write_line(bag);
-	bag = remove_read_line(bag);
+	line = write_line(bag[fd]);
+	bag[fd] = remove_read_line(bag[fd]);
 	if (!line)
 		return (NULL);
 	return (line);
 }
 
-/*  
 int main(void)
 {
-    int fd = open("test1.txt", O_RDONLY);
-    if (fd == -1) 
+	char	*s[] = {"test1.txt", "test2.txt", "test3.txt"};
+	int		i = 0;
+	int 	fd;
+	
+	char *line;
+	while (i < 6)
 	{
-        perror("Erro ao abrir o arquivo");
-        return 1;
-    }
-
-    char *line;
-    while ((line = get_next_line(fd)) != NULL) 
-	{
-        printf("%s", line);
-        free(line);
-    }
-
-    close(fd);
-    return (0);
-}  */
+		fd = open(s[i], O_RDONLY);
+		while ((line = get_next_line(fd)) != NULL) 
+		{
+			printf("%s", line);
+/* 			printf("\n"); */
+			free(line);
+		}
+		close(fd);
+		i++;
+	}
+	return (0);
+} 
