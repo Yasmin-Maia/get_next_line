@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ymaia-do <ymaia-do@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yasmin <yasmin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 15:40:29 by yasmin            #+#    #+#             */
-/*   Updated: 2024/12/23 10:43:31 by ymaia-do         ###   ########.fr       */
+/*   Updated: 2025/04/17 15:00:36 by yasmin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-size_t	ft_strlen(const char *s)
+size_t	gnl_strlen(const char *s)
 {
 	int	i;
 
@@ -30,7 +30,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 
 	i = 0;
 	j = 0;
-	temp = ft_calloc(sizeof(char), (ft_strlen(s1) + ft_strlen(s2) + 1));
+	temp = ft_calloc(sizeof(char), (gnl_strlen(s1) + gnl_strlen(s2) + 1));
 	if (temp == NULL)
 		return (NULL);
 	while (s1[i])

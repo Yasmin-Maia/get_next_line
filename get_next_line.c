@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ymaia-do <ymaia-do@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yasmin <yasmin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 15:24:47 by yasmin            #+#    #+#             */
-/*   Updated: 2024/12/27 13:40:44 by ymaia-do         ###   ########.fr       */
+/*   Updated: 2025/04/17 14:59:19 by yasmin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ static char	*remove_read_line(char *bag)
 		i++;
 	if (bag[i] == '\0')
 		return (free(bag), NULL);
-	new_bag = ft_calloc(sizeof(char), (ft_strlen(bag) - i + 1));
+	new_bag = ft_calloc(sizeof(char), (gnl_strlen(bag) - i + 1));
 	if (!new_bag)
 		return (free(bag), NULL);
 	i++;

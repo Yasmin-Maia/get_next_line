@@ -1,1 +1,0 @@
-This is a very long line without any newlines to test how the buffer handles large strings.
